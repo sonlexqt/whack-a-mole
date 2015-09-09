@@ -33,6 +33,7 @@ class GameManager:
         self.mole.append(sprite_sheet.subsurface(853, 0, 116, 81))
         # Init debugger
         self.debugger = Debugger("debug")
+        self.soundEffect = SoundEfect()
 
     def update_score(self):
         current_score_string = "SCORE: " + str(self.score)
@@ -124,6 +125,11 @@ def is_mole_hit(mouse_position, current_hole_position):
         return True
     else:
         return False
+
+class SoundEfect:
+    def __init__(self):
+        self.mainTrack = pygame.mixer.music.load("Sounds/themesong.wav")
+        pygame.mixer.music.play(-1)
 
 ###############################################################
 # Initialize the game
