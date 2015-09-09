@@ -80,8 +80,7 @@ class GameManager:
                 num = 0
                 is_down = False
                 interval = 0.5
-                frame_num = 1
-                #random.randint(0, 8)
+                frame_num = random.randint(0, 8)
 
             mil = clock.tick(FPS)
             sec = mil / 1000.0
