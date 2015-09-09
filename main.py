@@ -14,6 +14,7 @@ class GameManager:
         self.FONT_SIZE = 31
         self.FONT_TOP_MARGIN = 26
         self.LEVEL_SCORE_GAP = 4
+        self.LEFT_MOUSE_BUTTON = 1
         self.GAME_TITLE = "Whack A Mole - Game Programming - Assignment 1"
         # Initialize player's score, number of missed hits and level
         self.score = 0
@@ -49,7 +50,7 @@ class GameManager:
         # Init debugger
         self.debugger = Debugger("debug")
         # Sound effects
-        self.soundEffect = SoundEfect()
+        self.soundEffect = SoundEffect()
 
     # Calculate the player level according to his current score & the LEVEL_SCORE_GAP constant
     def get_player_level(self):
@@ -125,7 +126,7 @@ class GameManager:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     loop = False
-                if event.type == MOUSEBUTTONDOWN:
+                if event.type == MOUSEBUTTONDOWN and event.button == self.LEFT_MOUSE_BUTTON:
                     self.soundEffect.playFire()
                     if self.is_mole_hit(mouse.get_pos(), self.hole_positions[frame_num]) and num > 0 and left == 0:
                         num = 3
@@ -193,7 +194,7 @@ class Debugger:
             print("> DEBUG: " + str(message))
 
 
-class SoundEfect:
+class SoundEffect:
     def __init__(self):
         self.mainTrack = pygame.mixer.music.load("sounds/themesong.wav")
         self.fireSound = pygame.mixer.Sound("sounds/fire.wav")
@@ -226,6 +227,7 @@ class SoundEfect:
 
     def stopLevelUp(self):
         self.levelSound.stop()
+
 ###############################################################
 # Initialize the game
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
