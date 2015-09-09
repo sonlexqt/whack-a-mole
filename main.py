@@ -10,12 +10,15 @@ FPS = 60
 MOLE_WIDTH = 90
 MOLE_HEIGHT = 81
 FONT_SIZE = 50
+LEVEL_SCORE_GAP = 5
 GAME_TITLE = "Whack A Mole - Game Programming - Assignment 1"
 
 
 class GameManager:
     def __init__(self):
         self.score = 0
+        self.misses = 0
+        self.level = 1
         # Initialize screen
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption(GAME_TITLE)
@@ -34,13 +37,31 @@ class GameManager:
         # Init debugger
         self.debugger = Debugger("debug")
 
-    def update_score(self):
+    def get_player_level(self):
+        return 1 + int(self.score / LEVEL_SCORE_GAP)
+
+    def update(self):
+        # Update the player's score
         current_score_string = "SCORE: " + str(self.score)
-        text = self.font_obj.render(current_score_string, True, (255, 255, 255))
-        text_pos = text.get_rect()
-        text_pos.centerx = self.background.get_rect().centerx
-        text_pos.centery = 20
-        self.screen.blit(text, text_pos)
+        score_text = self.font_obj.render(current_score_string, True, (255, 255, 255))
+        score_text_pos = score_text.get_rect()
+        score_text_pos.centerx = self.background.get_rect().centerx
+        score_text_pos.centery = 20
+        self.screen.blit(score_text, score_text_pos)
+        # Update the player's misses
+        current_misses_string = "MISSES: " + str(self.misses)
+        misses_text = self.font_obj.render(current_misses_string, True, (255, 255, 255))
+        misses_text_pos = misses_text.get_rect()
+        misses_text_pos.centerx = SCREEN_WIDTH / 5 * 4
+        misses_text_pos.centery = 20
+        self.screen.blit(misses_text, misses_text_pos)
+        # Update the player's level
+        current_level_string = "LEVEL: " + str(self.level)
+        level_text = self.font_obj.render(current_level_string, True, (255, 255, 255))
+        level_text_pos = level_text.get_rect()
+        level_text_pos.centerx = SCREEN_WIDTH / 5 * 1
+        level_text_pos.centery = 20
+        self.screen.blit(level_text, level_text_pos)
 
     def start(self):
         cycle_time = 0
@@ -67,16 +88,22 @@ class GameManager:
                         left = 14
                         is_down = False
                         interval = 0
-                        self.score += 1
-                        self.update_score()
+                        self.score += 1  # Increase player's score
+                        self.level = self.get_player_level()  # Calculate player's level
+                        self.update()
+                    else:
+                        self.misses += 1
+                        self.update()
+
             if num > 5:
                 self.screen.blit(self.background, (0, 0))
+                self.update()
                 num = -1
                 left = 0
                 
             if num == -1:
                 self.screen.blit(self.background, (0, 0))
-                self.update_score()
+                self.update()
                 num = 0
                 is_down = False
                 interval = 0.5
@@ -89,7 +116,7 @@ class GameManager:
                 pic = self.mole[num]
                 self.screen.blit(self.background, (0, 0))
                 self.screen.blit(pic, (hole_positions[frame_num][0] - left, hole_positions[frame_num][1]))
-                self.update_score()
+                self.update()
                 if is_down is False:
                     num += 1
                 else:
@@ -99,7 +126,7 @@ class GameManager:
                 elif num == 3:
                     num -= 1
                     is_down = True
-                    interval = 0.2
+                    interval = 0.8 #TODO
                 else:
                     interval = 0.1
                 cycle_time = 0
