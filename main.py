@@ -28,6 +28,9 @@ class GameManager:
         self.mole.append(sprite_sheet.subsurface(169, 0, 90, 81))
         self.mole.append(sprite_sheet.subsurface(309, 0, 90, 81))
         self.mole.append(sprite_sheet.subsurface(449, 0, 90, 81))
+        self.mole.append(sprite_sheet.subsurface(575, 0, 116, 81))
+        self.mole.append(sprite_sheet.subsurface(717, 0, 116, 81))
+        self.mole.append(sprite_sheet.subsurface(853, 0, 116, 81))
         # Init debugger
         self.debugger = Debugger("debug")
 
@@ -46,6 +49,7 @@ class GameManager:
         is_down = False
         interval = 0.1
         frame_num = 0
+        left = 0
         # Time control variables
         clock = pygame.time.Clock()
 
@@ -58,17 +62,26 @@ class GameManager:
                 if event.type == pygame.QUIT:
                     loop = False
                 if event.type == MOUSEBUTTONDOWN:
-                    if is_mole_hit(mouse.get_pos(), hole_positions[frame_num]):
+                    if is_mole_hit(mouse.get_pos(), hole_positions[frame_num]) and num > 0 and left == 0:
+                        num = 3
+                        left = 14
+                        is_down = False
+                        interval = 0
                         self.score += 1
                         self.update_score()
-
+            if num > 5:
+                self.screen.blit(self.background, (0, 0))
+                num = -1
+                left = 0
+                
             if num == -1:
                 self.screen.blit(self.background, (0, 0))
                 self.update_score()
                 num = 0
                 is_down = False
                 interval = 0.5
-                frame_num = random.randint(0, 8)
+                frame_num = 1
+                #random.randint(0, 8)
 
             mil = clock.tick(FPS)
             sec = mil / 1000.0
@@ -76,16 +89,18 @@ class GameManager:
             if cycle_time > interval:
                 pic = self.mole[num]
                 self.screen.blit(self.background, (0, 0))
-                self.screen.blit(pic, hole_positions[frame_num])
+                self.screen.blit(pic, (hole_positions[frame_num][0] - left, hole_positions[frame_num][1]))
                 self.update_score()
                 if is_down is False:
                     num += 1
                 else:
                     num -= 1
-                if num > 2:
+                if num == 4:
+                    interval = 0.3
+                elif num == 3:
                     num -= 1
                     is_down = True
-                    interval = 0.3
+                    interval = 0.2
                 else:
                     interval = 0.1
                 cycle_time = 0
