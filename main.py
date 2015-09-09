@@ -11,7 +11,8 @@ class GameManager:
         self.FPS = 60
         self.MOLE_WIDTH = 90
         self.MOLE_HEIGHT = 81
-        self.FONT_SIZE = 50
+        self.FONT_SIZE = 31
+        self.FONT_TOP_MARGIN = 26
         self.LEVEL_SCORE_GAP = 4
         self.GAME_TITLE = "Whack A Mole - Game Programming - Assignment 1"
         # Initialize player's score, number of missed hits and level
@@ -23,7 +24,7 @@ class GameManager:
         pygame.display.set_caption(self.GAME_TITLE)
         self.background = pygame.image.load("images/bg.png")
         # Font object for displaying text
-        self.font_obj = pygame.font.SysFont(None, self.FONT_SIZE)
+        self.font_obj = pygame.font.Font('./fonts/GROBOLD.ttf', self.FONT_SIZE)
         # Initialize the mole's sprite sheet
         # 6 different states
         sprite_sheet = pygame.image.load("images/mole.png")
@@ -79,21 +80,21 @@ class GameManager:
         score_text = self.font_obj.render(current_score_string, True, (255, 255, 255))
         score_text_pos = score_text.get_rect()
         score_text_pos.centerx = self.background.get_rect().centerx
-        score_text_pos.centery = 20
+        score_text_pos.centery = self.FONT_TOP_MARGIN
         self.screen.blit(score_text, score_text_pos)
         # Update the player's misses
         current_misses_string = "MISSES: " + str(self.misses)
         misses_text = self.font_obj.render(current_misses_string, True, (255, 255, 255))
         misses_text_pos = misses_text.get_rect()
         misses_text_pos.centerx = self.SCREEN_WIDTH / 5 * 4
-        misses_text_pos.centery = 20
+        misses_text_pos.centery = self.FONT_TOP_MARGIN
         self.screen.blit(misses_text, misses_text_pos)
         # Update the player's level
         current_level_string = "LEVEL: " + str(self.level)
         level_text = self.font_obj.render(current_level_string, True, (255, 255, 255))
         level_text_pos = level_text.get_rect()
         level_text_pos.centerx = self.SCREEN_WIDTH / 5 * 1
-        level_text_pos.centery = 20
+        level_text_pos.centery = self.FONT_TOP_MARGIN
         self.screen.blit(level_text, level_text_pos)
 
     # Start the game's main loop
